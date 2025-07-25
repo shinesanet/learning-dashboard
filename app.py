@@ -50,6 +50,17 @@ def load_data():
 
 # Функция для стилизации
 def apply_style():
+    # Кнопка загрузки файла
+uploaded_file = st.file_uploader("Загрузите новый файл данных (Excel)", type=["xlsx"])
+
+if uploaded_file is not None:
+    try:
+        # Сохраняем загруженный файл
+        with open("data/learning_data.xlsx", "wb") as f:
+            f.write(uploaded_file.getbuffer())
+        st.success("Файл успешно сохранён! Обновите страницу через 1 минуту.")
+    except Exception as e:
+        st.error(f"Ошибка сохранения файла: {e}")
     st.markdown("""
     <style>
     .main {
