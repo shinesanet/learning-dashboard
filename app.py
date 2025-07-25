@@ -16,7 +16,25 @@ st.set_page_config(
 
 # Функция для загрузки данных
 @st.cache_data
-def load_data(file):
+def load_data():
+    # Попробуем загрузить из GitHub
+    try:
+        url = "https://raw.githubusercontent.com/[ВАШ_ЛОГИН]/[НАЗВАНИЕ_РЕПОЗИТОРИЯ]/main/data/learning_data.xlsx"
+        # Пример: url = "https://raw.githubusercontent.com/ivanov/learning-dashboard/main/data/learning_data.xlsx"
+        
+        response = requests.get(url)
+        with open("temp_data.xlsx", "wb") as f:
+            f.write(response.content)
+        df = pd.read_excel("temp_data.xlsx")
+        st.success("Данные успешно загружены из GitHub")
+        return df
+    except Exception as e:
+        st.warning(f"Ошибка загрузки из GitHub: {e}. Используется локальный файл")
+        try:
+            return pd.read_excel("data/learning_data.xlsx")
+        except:
+            st.error("Локальный файл не найден. Загрузите файл данных")
+            return pd.DataFrame()
     df = pd.read_excel(file, sheet_name="РЕЗУЛЬТАТЫ ПЕРВИЧНОГО ОБУЧЕНИЯ")
     
     # Обработка данных
